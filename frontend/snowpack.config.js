@@ -1,6 +1,9 @@
 // Snowpack Configuration File
 // See all supported options: https://www.snowpack.dev/reference/configuration
 
+const httpProxy = require('http-proxy');
+const proxy = httpProxy.createServer({ target: 'http://localhost:9000' });
+
 /** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
@@ -16,4 +19,13 @@ module.exports = {
   buildOptions: {
     /* ... */
   },
+  routes: [
+    {
+      src: '/pistats',
+      dest: (req, res) => {
+        req.url = '/';
+        return proxy.web(req, res);
+      },
+    },
+  ],
 };
