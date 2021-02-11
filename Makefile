@@ -12,7 +12,8 @@ deploy_api:
 	ssh raspberrypi "sudo systemctl restart $(app_name)"
 
 deploy_front:
-	scp -r ./frontend/* raspberrypi:/var/www/html
+	cd frontend; npm run build
+	scp -r ./frontend/build/* raspberrypi:/var/www/html
 
 deploy:
 	make deploy_api
