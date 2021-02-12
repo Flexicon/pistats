@@ -3,7 +3,7 @@ import { html } from 'htm/preact';
 import StatsList from './StatsList';
 
 export default function Stats({ data, isLoading, isError }) {
-  if (isLoading) {
+  if (isLoading && !data) {
     return html`<div class="py-5">Loading stats...</div>`;
   }
 
@@ -18,5 +18,7 @@ export default function Stats({ data, isLoading, isError }) {
     value: data[name],
   }));
 
-  return html`<div class="pb-5 pt-10"><${StatsList} items=${statsItems} /></div>`;
+  return html`<div class="pb-5 pt-10">
+    <${StatsList} items=${statsItems} />
+  </div>`;
 }

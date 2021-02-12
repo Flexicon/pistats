@@ -1,26 +1,58 @@
 import { html } from 'htm/preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useReducer, useEffect } from 'preact/hooks';
 
 import Stats from './components/Stats';
 
-export default function App() {
-  const [stats, setStats] = useState(null);
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+const initialState = {
+  stats: null,
+  isLoading: true,
+  isError: false,
+};
 
-  useEffect(async () => {
-    setIsError(false);
-    setIsLoading(true);
+const reducer = (state, { type, payload }) => {
+  switch (type) {
+    case 'startLoading':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case 'hasError':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+      };
+    case 'saveData':
+      return {
+        ...state,
+        stats: payload,
+        isLoading: false,
+        isError: false,
+      };
+  }
+};
+
+export default function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { stats, isLoading, isError } = state;
+
+  const fetchStats = async () => {
+    dispatch({ type: 'startLoading' });
 
     const res = await fetch('/pistats');
     if (!res.ok) {
-      setIsLoading(false);
-      setIsError(true);
+      dispatch({ type: 'hasError' });
       return;
     }
 
-    setStats(await res.json());
-    setIsLoading(false);
+    dispatch({ type: 'saveData', payload: await res.json() });
+  };
+
+  useEffect(async () => {
+    await fetchStats();
+    const inter = setInterval(fetchStats, 5000);
+    return () => clearInterval(inter);
   }, []);
 
   return html`<div>
