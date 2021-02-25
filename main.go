@@ -22,7 +22,7 @@ var providers = []StatProvider{
 		pipeline: []statCmd{
 			{name: "free", args: []string{"-tmw"}},
 			{name: "tail", args: []string{"-n", "1"}},
-			{name: "awk", args: []string{"{print $4}"}},
+			{name: "awk", args: []string{"{print $3}"}},
 		},
 	},
 	&shellStat{
