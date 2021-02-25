@@ -51,7 +51,7 @@ export default function App() {
 
   useEffect(async () => {
     await fetchStats();
-    const inter = setInterval(fetchStats, 5000);
+    const inter = setInterval(fetchStats, 2000);
     return () => clearInterval(inter);
   }, []);
 
