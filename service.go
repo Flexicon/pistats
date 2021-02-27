@@ -14,18 +14,23 @@ func NewStatsService(p []StatProvider) *StatsService {
 
 // GetAllStats from all existing Providers
 func (s *StatsService) GetAllStats() (map[string]string, error) {
-	var wg sync.WaitGroup
+	wg := &sync.WaitGroup{}
+	mu := &sync.Mutex{}
 	stats := make(map[string]string, len(s.Providers))
 
 	for _, p := range s.Providers {
 		wg.Add(1)
 		go func(p StatProvider) {
 			defer wg.Done()
+
 			result, err := p.Get()
 			if err != nil {
 				result = err.Error()
 			}
+
+			mu.Lock()
 			stats[p.Name()] = result
+			mu.Unlock()
 		}(p)
 	}
 	wg.Wait()
