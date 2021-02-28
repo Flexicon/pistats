@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 // all stat providers
@@ -41,7 +42,14 @@ func main() {
 
 	service := NewStatsService(providers)
 
-	e.GET("/", indexHandler(service))
+	e.Pre(middleware.RemoveTrailingSlash())
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	root := e.Group("/pistats")
+
+	root.GET("", indexHandler(service))
 
 	e.Logger.Fatal(e.Start(":9000"))
 }
