@@ -23,7 +23,6 @@ module.exports = {
     {
       src: '/pistats',
       dest: (req, res) => {
-        req.url = '/';
         return proxy.web(req, res);
       },
     },

@@ -8,7 +8,7 @@ const ellipsize = (val, maxLength = 20) => {
 };
 
 export default function StatsListItem({ name, value }) {
-  return html`<div class="bg-gray-100 p-5 rounded-lg shadow-md font-mono">
+  return html`<div class="bg-white p-5 rounded-lg shadow-md font-mono">
     <div class="text-gray-500 mb-3">${name}</div>
     <div title="${value}">${ellipsize(value)}</div>
   </div>`;
