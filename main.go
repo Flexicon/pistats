@@ -1,8 +1,12 @@
 package main
 
 import (
+	"net/http"
+	"os/exec"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/pkg/errors"
 )
 
 // all stat providers
@@ -50,6 +54,7 @@ func main() {
 	root := e.Group("/pistats")
 
 	root.GET("", indexHandler(service))
+	root.GET("/reboot", rebootHandler())
 
 	e.Logger.Fatal(e.Start(":9000"))
 }
@@ -58,9 +63,20 @@ func indexHandler(s *StatsService) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		stats, err := s.GetAllStats()
 		if err != nil {
-			return echo.NewHTTPError(500, err)
+			return echo.NewHTTPError(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(200, stats)
+		return c.JSON(http.StatusOK, stats)
+	}
+}
+
+func rebootHandler() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		if err := exec.Command("sudo", "reboot", "now").Run(); err != nil {
+			err = errors.Wrap(err, "reboot command failed")
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+
+		return c.NoContent(http.StatusAccepted)
 	}
 }

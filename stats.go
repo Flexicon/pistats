@@ -65,11 +65,11 @@ func (s *shellStat) Get() (string, error) {
 	stack[i].Stderr = &errorBuf
 
 	if err := s.call(stack, pipeStack); err != nil {
-		err = errors.Wrap(err, string(errorBuf.Bytes()))
+		err = errors.Wrap(err, errorBuf.String())
 		return "", err
 	}
 
-	return strings.TrimSpace(string(outputBuf.Bytes())), nil
+	return strings.TrimSpace(outputBuf.String()), nil
 }
 
 func (s *shellStat) call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
@@ -84,7 +84,7 @@ func (s *shellStat) call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) 
 		}
 		defer func() {
 			if err == nil {
-				pipes[0].Close()
+				_ = pipes[0].Close()
 				err = s.call(stack[1:], pipes[1:])
 			}
 		}()

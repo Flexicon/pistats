@@ -18,7 +18,7 @@ export default function Stats({ data, isLoading, isError }) {
     value: data[name],
   }));
 
-  return html`<div class="pb-5 pt-10">
+  return html`<div class="py-5">
     <${StatsList} items=${statsItems} />
   </div>`;
 }
