@@ -39,6 +39,12 @@ var providers = []StatProvider{
 			{name: "awk", args: []string{"{print $5}"}},
 		},
 	},
+	&shellStat{
+		name: "uptime",
+		pipeline: []statCmd{
+			{name: "uptime", args: []string{"-p"}},
+		},
+	},
 }
 
 func main() {
