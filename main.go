@@ -45,6 +45,15 @@ var providers = []StatProvider{
 			{name: "uptime", args: []string{"-p"}},
 		},
 	},
+	&shellStat{
+		name: "idle_cpu",
+		pipeline: []statCmd{
+			{name: "iostat", args: []string{"-hc"}},
+			{name: "head", args: []string{"-n", "4"}},
+			{name: "tail", args: []string{"-n", "1"}},
+			{name: "awk", args: []string{"{print $6}"}},
+		},
+	},
 }
 
 func main() {
