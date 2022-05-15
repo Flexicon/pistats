@@ -66,12 +66,12 @@ export default function App() {
   const onReboot = async () => {
     dispatch({ type: 'rebooting' });
     await fetch('/pistats/reboot');
-    setTimeout(() => window.location.reload(), 30000);
+    setTimeout(() => window.location.reload(), 60000);
   };
 
   if (state.isRebooting) {
     return html`<div class="w-11/12 lg:w-4/5 text-center mx-auto py-8">
-      Rebooting now. Please wait, this page will automatically refresh after 30
+      Rebooting now. Please wait, this page will automatically refresh after 60
       seconds.
     </div>`;
   }
