@@ -19,7 +19,7 @@ var providers = []StatProvider{
 		pipeline: []statCmd{
 			{name: "free", args: []string{"-tmw"}},
 			{name: "tail", args: []string{"-n", "1"}},
-			{name: "awk", args: []string{"{print $2}"}},
+			{name: "awk", args: []string{"{print $2 \"MB\"}"}},
 		},
 	},
 	&shellStat{
@@ -27,7 +27,7 @@ var providers = []StatProvider{
 		pipeline: []statCmd{
 			{name: "free", args: []string{"-tmw"}},
 			{name: "tail", args: []string{"-n", "1"}},
-			{name: "awk", args: []string{"{print $3}"}},
+			{name: "awk", args: []string{"{print $3 \"MB\"}"}},
 		},
 	},
 	&shellStat{
