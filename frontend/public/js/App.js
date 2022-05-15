@@ -3,6 +3,7 @@ import { useState, useReducer, useEffect } from 'preact/hooks';
 
 import Controls from './components/Controls';
 import Stats from './components/Stats';
+import Rebooting from './components/Rebooting';
 import { useInterval } from './hooks';
 
 const initialState = {
@@ -46,6 +47,7 @@ const reducer = (state, { type, payload }) => {
 export default function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { stats, isLoading, isError } = state;
+  const rebootDelaySeconds = 60;
 
   useInterval(
     async () => {
@@ -59,21 +61,18 @@ export default function App() {
 
       dispatch({ type: 'saveData', payload: await res.json() });
     },
-    2000,
+    5000,
     { immediate: true }
   );
 
   const onReboot = async () => {
     dispatch({ type: 'rebooting' });
     await fetch('/pistats/reboot');
-    setTimeout(() => window.location.reload(), 60000);
+    setTimeout(() => window.location.reload(), rebootDelaySeconds * 1000);
   };
 
   if (state.isRebooting) {
-    return html`<div class="w-11/12 lg:w-4/5 text-center mx-auto py-8">
-      Rebooting now. Please wait, this page will automatically refresh after 60
-      seconds.
-    </div>`;
+    return html`<${Rebooting} delay=${rebootDelaySeconds} />`;
   }
 
   return html`<div>
